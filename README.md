@@ -1,1 +1,0 @@
-# aomthx.github.io

@@ -4,43 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script>
+    let start = new Date();
+  </script>
   <style>
     *{
-      /* border: 5px solid rgb(0, 166, 255); */
       margin: 0;
     }
     header{
-      border: 3px solid rgb(90, 26, 158);
+      text-align: center;
+      font-size: 30px;
+      border: 10px solid rgb(160, 234, 14);
       height: 50%;
     }
     footer{
-      border: 3px solid rgb(55, 255, 0);
+      text-align: center;
+      font-size: 30px;
+      border: 10px solid rgb(160, 234, 14);
       height: 50%;
     }
   </style>
-  <script>
-    console.time('build');
-  </script>
+
 </head>
 <body>
   <header>
-    :(
+    测测你的电脑性能 :)
   </header>
   <footer>
-    prprprpr
+
   </footer>
   <script>
     let bd = document.querySelector('body');
-    bd.style.height = ('100vh');
-    // alert('猪猪');
-    // console.log('YOU!!');
-    console.timeEnd('build');
-    console.time('1addTo1e6');
-    for(let i = 1;i<1e6;)
-    {
-      i++;
-    }
-    console.timeEnd('1addTo1e6');
+    bd.style.height = innerHeight - 40 + "px";
+    let footerDom = document.querySelector("footer");
+    footerDom.textContent = ("渲染网页耗时" +  (new Date() - start) + "ms");
   </script>
 </body>
 </html>

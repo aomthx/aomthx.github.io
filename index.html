@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{
+      /* border: 5px solid rgb(0, 166, 255); */
+      margin: 0;
+    }
+    header{
+      border: 3px solid rgb(90, 26, 158);
+      height: 50%;
+    }
+    footer{
+      border: 3px solid rgb(55, 255, 0);
+      height: 50%;
+    }
+  </style>
+  <script>
+    console.time('build');
+  </script>
+</head>
+<body>
+  <header>
+    :(
+  </header>
+  <footer>
+    prprprpr
+  </footer>
+  <script>
+    let bd = document.querySelector('body');
+    bd.style.height = ('100vh');
+    // alert('猪猪');
+    // console.log('YOU!!');
+    console.timeEnd('build');
+    console.time('1addTo1e6');
+    for(let i = 1;i<1e6;)
+    {
+      i++;
+    }
+    console.timeEnd('1addTo1e6');
+  </script>
+</body>
+</html>

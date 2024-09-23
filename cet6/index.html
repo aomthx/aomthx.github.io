@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CET-6</title>
+  <style>
+    *{
+      margin: 1px;
+      background-color: antiquewhite;
+      text-align: center;
+      font-size: larger;
+    }
+    p{
+      border: 3px solid black ;
+    }
+  </style>
+</head>
+<body>
+  <header>
+      <h1>CET-6单词</h1>
+  </header>
+  <main>
+    <p id="en">单词</p>
+    <p id="pr">音标</p>
+    <p id="cn">中文注释</p>
+    <button id="random">随机选取单词</button>
+  </main>
+  <footer>
+    2024.9.23
+  </footer>
+  <script>
+    let cet6String = "";
+    fetch("./cet6.txt")
+    .then(txt => cet6String = txt);
+    let randWord = select("button#random");
+    randWord.onclick = function(){
+      let wordArray = cet6String.split('\r\n');
+      let i = Math.floor(Math.random()*wordArray.length);
+      let aWord = wordArray[i];
+      let begin = aWord.indexOf('\t');
+      let end = aWord.lastIndexOf('\t');
+      let en = aWord.slice(0,begin);
+      let pr = aWord.slice(begin+1,end);
+      let cn = aWord.slice(end+1);
+      select("p#en" ).textContent = en;
+      select("p#pr").textContent = pr;
+      select("p#cn").textContent = cn;
+    };
+    function select(selector){
+      let dom = document.querySelector(selector);
+      return dom;
+    }
+  </script>
+</body>
+</html>

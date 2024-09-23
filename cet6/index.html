@@ -31,8 +31,9 @@
   </footer>
   <script>
     let cet6String = "";
-    fetch("./cet6.txt")
-    .then(txt => cet6String = txt);
+    fetch("cet6.txt")
+    .then(response => response.text())
+    .then(text => cet6String = text);
     let randWord = select("button#random");
     randWord.onclick = function(){
       let wordArray = cet6String.split('\r\n');

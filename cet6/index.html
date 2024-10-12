@@ -10,10 +10,14 @@
       background-color: antiquewhite;
       text-align: center;
       font-size: larger;
+      
+      box-sizing: border-box;
     }
-    p{
+    body{
       border: 3px solid black ;
+      height:99vh ;
     }
+    
   </style>
 </head>
 <body>
@@ -31,27 +35,45 @@
   </footer>
   <script>
     let cet6String = "";
+    let cet6 = {
+      wordArray: [],
+      words: [] 
+    };
+
     fetch("cet6.txt")
-    .then(response => response.text())
-    .then(text => cet6String = text);
+      .then(response => response.text())
+      .then(text => cet6String = text)
+      .catch(error => console.error("Error fetching cet6.txt:", error));
+
+    function Lording() {
+      cet6.wordArray = cet6String.split("\r\n");
+
+      for (let i = 0; i < cet6.wordArray.length; i++) {
+        let aWord = cet6.wordArray[i].split('\t'); 
+        if (aWord.length >= 3) {
+          let wordObj = {
+            en: aWord[0],
+            pr: aWord[1],
+            cn: aWord[2]
+          };
+          cet6.words.push(wordObj);
+        }
+      }
+    }
+
     let randWord = select("button#random");
     randWord.onclick = function(){
-      let wordArray = cet6String.split('\r\n');
-      let i = Math.floor(Math.random()*wordArray.length);
-      let aWord = wordArray[i];
-      let begin = aWord.indexOf('\t');
-      let end = aWord.lastIndexOf('\t');
-      let en = aWord.slice(0,begin);
-      let pr = aWord.slice(begin+1,end);
-      let cn = aWord.slice(end+1);
-      select("p#en" ).textContent = en;
-      select("p#pr").textContent = pr;
-      select("p#cn").textContent = cn;
+      Lording();
+      let i = Math.floor(Math.random()*cet6.words.length);
+      select("p#en" ).textContent = cet6.words[i].en;
+      select("p#pr").textContent = cet6.words[i].pr;
+      select("p#cn").textContent = cet6.words[i].cn;
     };
     function select(selector){
       let dom = document.querySelector(selector);
       return dom;
     }
+    
   </script>
 </body>
 </html>

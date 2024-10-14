@@ -9,13 +9,25 @@
       margin: 1px;
       background-color: antiquewhite;
       text-align: center;
-      font-size: larger;
-      
       box-sizing: border-box;
     }
     body{
       border: 3px solid black ;
       height:99vh ;
+    }
+    .words{
+      font-size:x-large;
+    }
+    button{
+      background-color: beige;
+      border-radius: 5px;
+    }
+    button:hover{
+      background-color: rgb(223, 223, 176);
+    }
+    button:active{
+      background-color:black;
+      color: white;
     }
     
   </style>
@@ -25,10 +37,17 @@
       <h1>CET-6单词</h1>
   </header>
   <main>
-    <p id="en">单词</p>
+    <div class="words">
+      <p id="en">单词</p>
     <p id="pr">音标</p>
     <p id="cn">中文注释</p>
-    <button id="random">随机选取单词</button>
+    </div>
+    <div class="buttons">
+      <button id="loading">导入单词</button>
+      <button id="stat">开始</button>
+      <button id="next">下一个</button>
+      <button id="random">随机单词</button>
+    </div>
   </main>
   <footer>
     2024.9.23
@@ -37,7 +56,8 @@
     let cet6String = "";
     let cet6 = {
       wordArray: [],
-      words: [] 
+      words: [] ,
+      pos: 0
     };
 
     fetch("cet6.txt")
@@ -45,10 +65,22 @@
       .then(text => cet6String = text)
       .catch(error => console.error("Error fetching cet6.txt:", error));
 
-    function Lording() {
-      cet6.wordArray = cet6String.split("\r\n");
+    function select(selector){
+      let dom = document.querySelector(selector);
+      return dom;
+    }
+    
+    function printWord() {
+      select("p#en" ).textContent = cet6.words[cet6.pos].en;
+      select("p#pr").textContent = cet6.words[cet6.pos].pr;
+      select("p#cn").textContent = cet6.words[cet6.pos].cn;
+      select("footer").textContent = "选取了第"+(cet6.pos+1)+"个单词";
+    }
 
-      for (let i = 0; i < cet6.wordArray.length; i++) {
+    select("button#loading").onclick = function() {
+      cet6.wordArray = cet6String.split("\r\n");
+      let i = 0;
+      for (; i < cet6.wordArray.length; i++) {
         let aWord = cet6.wordArray[i].split('\t'); 
         if (aWord.length >= 3) {
           let wordObj = {
@@ -59,21 +91,24 @@
           cet6.words.push(wordObj);
         }
       }
+      select("footer").textContent = "成功读取"+(i)+"个单词";
     }
 
-    let randWord = select("button#random");
-    randWord.onclick = function(){
-      Lording();
+    select("button#random").onclick = function(){
       let i = Math.floor(Math.random()*cet6.words.length);
-      select("p#en" ).textContent = cet6.words[i].en;
-      select("p#pr").textContent = cet6.words[i].pr;
-      select("p#cn").textContent = cet6.words[i].cn;
-    };
-    function select(selector){
-      let dom = document.querySelector(selector);
-      return dom;
+      cet6.pos = i;
+      printWord();
+    } 
+
+    select("button#stat").onclick = function(){
+      cet6.pos = 0;
+      printWord();
     }
-    
+
+    select("button#next").onclick = function(){
+      cet6.pos ++;
+      printWord();
+    }
   </script>
 </body>
 </html>

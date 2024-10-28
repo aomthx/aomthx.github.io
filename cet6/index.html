@@ -5,58 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CET-6</title>
   <style>
-    *{
-      margin: 1px;
-      background-color: antiquewhite;
-      text-align: center;
+    * {
       box-sizing: border-box;
     }
-    body{
-      border: 3px solid black ;
-      height:99vh ;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: antiquewhite;
+      text-align: center;
+      border: 3px solid black;
+      height: 99vh;
     }
-    .words{
-      font-size:x-large;
+    .words {
+      font-size: x-large;
     }
-    button{
+    button {
       background-color: beige;
       border-radius: 5px;
+      margin: 5px;
+      padding: 10px 20px;
     }
-    button:hover{
+    button:hover {
       background-color: rgb(223, 223, 176);
     }
-    button:active{
-      background-color:black;
+    button:active {
+      background-color: black;
       color: white;
     }
-    
+    table {
+      margin: 20px auto;
+    }
+    .feedback {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
   </style>
 </head>
 <body>
   <header>
-      <h1>CET-6单词</h1>
+    <h1>CET-6单词</h1>
   </header>
   <main>
     <div class="words">
       <p id="en">单词</p>
-    <p id="pr">音标</p>
-    <p id="cn">中文注释</p>
+      <p id="pr">音标</p>
+      <p id="cn">中文注释</p>
     </div>
     <div class="buttons">
       <button id="loading">导入单词</button>
       <button id="stat">开始</button>
       <button id="next">下一个</button>
       <button id="random">随机单词</button>
+      <button id="test">测一测</button>
     </div>
+    <div>
+      <form>
+        <table>
+          <tr>
+            <td>用户名 :</td>
+            <td><input type="text" name="username" id="username"></td>
+          </tr>
+          <tr>
+            <td>密码 :</td>
+            <td><input type="password" name="password" id="password"></td>
+          </tr>
+        </table>
+        <button id="sign">注册</button>
+        <button id="login">登录</button>
+      </form>
+    </div>
+    <div id="feedback" class="feedback"></div>
   </main>
-  <footer>
-    2024.9.23
-  </footer>
+  <footer>2024.9.23</footer>
+
   <script>
     let cet6String = "";
     let cet6 = {
       wordArray: [],
-      words: [] ,
+      words: [],
       pos: 0
     };
 
@@ -65,49 +97,103 @@
       .then(text => cet6String = text)
       .catch(error => console.error("Error fetching cet6.txt:", error));
 
-    function select(selector){
-      let dom = document.querySelector(selector);
-      return dom;
-    }
-    
-    function printWord() {
-      select("p#en" ).textContent = cet6.words[cet6.pos].en;
-      select("p#pr").textContent = cet6.words[cet6.pos].pr;
-      select("p#cn").textContent = cet6.words[cet6.pos].cn;
-      select("footer").textContent = "选取了第"+(cet6.pos+1)+"个单词";
+    function select(selector) {
+      return document.querySelector(selector);
     }
 
-    select("button#loading").onclick = function() {
-      cet6.wordArray = cet6String.split("\r\n");
-      let i = 0;
-      for (; i < cet6.wordArray.length; i++) {
-        let aWord = cet6.wordArray[i].split('\t'); 
+    function printWord() {
+      select("#en").textContent = cet6.words[cet6.pos].en;
+      select("#pr").textContent = cet6.words[cet6.pos].pr;
+      select("#cn").textContent = cet6.words[cet6.pos].cn;
+      select("footer").textContent = "选取了第" + (cet6.pos + 1) + "个单词";
+    }
+
+    select("#loading").onclick = function () {
+      cet6.wordArray = cet6String.split(/\r?\n/);
+      for (let i = 0; i < cet6.wordArray.length; i++) {
+        let aWord = cet6.wordArray[i].split('\t');
         if (aWord.length >= 3) {
-          let wordObj = {
-            en: aWord[0],
-            pr: aWord[1],
-            cn: aWord[2]
-          };
-          cet6.words.push(wordObj);
+          cet6.words.push({ en: aWord[0], pr: aWord[1], cn: aWord[2] });
         }
       }
-      select("footer").textContent = "成功读取"+(i)+"个单词";
+      select("footer").textContent = "成功读取" + cet6.words.length + "个单词";
     }
 
-    select("button#random").onclick = function(){
-      let i = Math.floor(Math.random()*cet6.words.length);
-      cet6.pos = i;
+    select("#random").onclick = function () {
+      cet6.pos = Math.floor(Math.random() * cet6.words.length);
       printWord();
-    } 
+    }
 
-    select("button#stat").onclick = function(){
+    select("#stat").onclick = function () {
       cet6.pos = 0;
       printWord();
     }
 
-    select("button#next").onclick = function(){
-      cet6.pos ++;
+    select("#next").onclick = function () {
+      cet6.pos = (cet6.pos + 1) % cet6.words.length;
       printWord();
+    }
+
+    select("#test").onclick = function () {
+      const rightOption = Math.floor(Math.random() * 4);
+      const options = [];
+      while (options.length < 4) {
+        const randomIndex = Math.floor(Math.random() * cet6.words.length);
+        const word = cet6.words[randomIndex];
+        if (!options.includes(word)) {
+          options.push(word);
+        }
+      }
+      displayTestOptions(rightOption, options);
+    }
+
+    function displayTestOptions(rightOption, options) {
+      const feedback = select("#feedback");
+      feedback.innerHTML = "";
+      select("#en").textContent = options[rightOption].en;
+      select("#pr").textContent = options[rightOption].pr;
+      select("#cn").textContent = "";
+
+      options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.textContent = option.cn;
+        button.onclick = () => {
+          if (index === rightOption) {
+            feedback.textContent = "正确!";
+            feedback.className = "feedback correct";
+          } else {
+            feedback.textContent = "错误!";
+            feedback.className = "feedback incorrect";
+          }
+        };
+        feedback.appendChild(button);
+      });
+    }
+
+    // 用户注册和登录功能
+    let usernameInput = select('#username');
+    let passwordInput = select('#password');
+
+    select("#sign").onclick = function (ev) {
+      ev.preventDefault();
+      let users = {
+        username: usernameInput.value,
+        password: passwordInput.value
+      };
+      localStorage.setItem('user', JSON.stringify(users));
+      alert("注册成功!");
+    }
+
+    select("#login").onclick = function (ev) {
+      ev.preventDefault();
+      let storedUser = JSON.parse(localStorage.getItem('user'));
+      if (storedUser &&
+          storedUser.username === usernameInput.value &&
+          storedUser.password === passwordInput.value) {
+        alert("登录成功!");
+      } else {
+        alert("用户名或密码错误，请重试！");
+      }
     }
   </script>
 </body>

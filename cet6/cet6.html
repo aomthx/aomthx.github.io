@@ -9,12 +9,19 @@
       box-sizing: border-box;
     }
     body {
-      font-family: Arial, sans-serif;
+      font-size: x-large;
       margin: 0;
       background-color: antiquewhite;
       text-align: center;
-      border: 3px solid black;
       height: 99vh;
+    }
+    main{
+      border: 3px solid black;
+      border-radius: 5px;
+      min-height: 60vh;
+      width: 80vh ;
+      margin: auto;
+      background-color: rgb(247, 241, 233);
     }
     .words {
       font-size: x-large;
@@ -31,9 +38,6 @@
     button:active {
       background-color: black;
       color: white;
-    }
-    table {
-      margin: 20px auto;
     }
     .feedback {
       font-weight: bold;
@@ -67,7 +71,7 @@
     </div>
     <div id="feedback" class="feedback"></div>
   </main>
-  <footer>2024.9.23</footer>
+  <footer>2024.9.23 - 11.4</footer>
 
   <script>
     let cet6String = "";
@@ -87,10 +91,13 @@
     }
 
     function printWord() {
+      if($('.options'))
+        $('.options').remove();
       select("#en").textContent = cet6.words[cet6.pos].en;
       select("#pr").textContent = cet6.words[cet6.pos].pr;
       select("#cn").textContent = cet6.words[cet6.pos].cn;
-      select("feedback").textContent = "选取了第" + (cet6.pos + 1) + "个单词";
+      select("#feedback").textContent = "选取了第" + (cet6.pos + 1) + "个单词";
+      select("#feedback").className = "";
     }
 
     select("#loading").onclick = function () {
@@ -102,7 +109,7 @@
         }
       }
       select("#feedback").textContent = "成功读取" + cet6.words.length + "个单词";
-      select("#loading").disabled = true;
+      $("#loading").remove();
     }
 
     select("#random").onclick = function () {
@@ -121,6 +128,9 @@
     }
 
     select("#test").onclick = function () {
+      if(cet6.words.length == 0){
+        return;
+      }
       let rightOption = Math.floor(Math.random() * 4);
       let options = [];
       while (options.length < 4) {
@@ -142,7 +152,9 @@
 
       options.forEach((option, index) => {
         const button = document.createElement("button");
+        button.className = "options";
         button.textContent = option.cn;
+        feedback.appendChild(button);
         button.onclick = () => {
           if (index === rightOption) {
             feedback.textContent = "正确!";
@@ -152,7 +164,6 @@
             feedback.className = "incorrect";
           }
         };
-        feedback.appendChild(button);
       });
     }
   </script>

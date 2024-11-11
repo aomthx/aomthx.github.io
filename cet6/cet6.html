@@ -78,7 +78,8 @@
     let cet6 = {
       wordArray: [],
       words: [],
-      pos: 0
+      pos: 0,
+      level: []
     };
 
     fetch("cet6.txt")
@@ -106,6 +107,7 @@
         let aWord = cet6.wordArray[i].split('\t');
         if (aWord.length >= 3) {
           cet6.words.push({ en: aWord[0], pr: aWord[1], cn: aWord[2] });
+          cet6.level[i] = 0;
         }
       }
       select("#feedback").textContent = "成功读取" + cet6.words.length + "个单词";
@@ -133,22 +135,28 @@
       }
       let rightOption = Math.floor(Math.random() * 4);
       let options = [];
+      let wordLevel = 0;
       while (options.length < 4) {
         let randomIndex = Math.floor(Math.random() * cet6.words.length);
         let word = cet6.words[randomIndex];
+        if(options.length == rightOption){
+          wordLevel = randomIndex;
+          if(cet6.level[wordLevel] == 3)
+            continue;
+        } 
         if (!options.includes(word)) {
           options.push(word);
         }
       }
-      displayTestOptions(rightOption, options);
+      displayTestOptions(rightOption, options, wordLevel);
     }
 
-    function displayTestOptions(rightOption, options) {
+    function displayTestOptions(rightOption, options, wordLevel) {
       const feedback = select("#feedback");
       feedback.innerHTML = "";
       select("#en").textContent = options[rightOption].en;
       select("#pr").textContent = options[rightOption].pr;
-      select("#cn").textContent = "";
+      select("#cn").textContent = "熟悉度："+cet6.level[wordLevel];
 
       options.forEach((option, index) => {
         const button = document.createElement("button");
@@ -159,6 +167,7 @@
           if (index === rightOption) {
             feedback.textContent = "正确!";
             feedback.className = "correct";
+            cet6.level[wordLevel]++;
           } else {
             feedback.textContent = "错误!";
             feedback.className = "incorrect";

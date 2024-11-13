@@ -65,14 +65,14 @@
   </main>
   <footer></footer>
   <script>
-    let usernameInput = document.querySelector('#username').value;
-    let passwordInput = document.querySelector('#password').value;
+    let usernameInput = document.querySelector('#username');
+    let passwordInput = document.querySelector('#password');
 
     $('#sign').click ( function (ev) {
       ev.preventDefault();
       let user = {
-        username: usernameInput,
-        password: passwordInput
+        username: usernameInput.value,
+        password: passwordInput.value
       };
       if (!username || !password) {
         alert('请填写完整用户名和密码');
@@ -92,7 +92,7 @@
     $('#login').click ( function (ev) {
       ev.preventDefault();
       let users = JSON.parse(localStorage.getItem('users')) || [];
-      let userExists = users.some(storedUser => storedUser.username === usernameInput && storedUser.password === passwordInput);
+      let userExists = users.some(storedUser => storedUser.username === usernameInput.value && storedUser.password === passwordInput.value);
       if (userExists) {
         alert("登录成功!");
         $('body').load('./cet6.html')

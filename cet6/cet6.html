@@ -9,17 +9,18 @@
       box-sizing: border-box;
     }
     body {
-      font-size: x-large;
+      font-size: calc(10px+1vh);
       margin: 0;
       background-color: antiquewhite;
       text-align: center;
       height: 99vh;
+      position: relative;
     }
     main{
       border: 3px solid black;
       border-radius: 5px;
-      min-height: 60vh;
-      width: 80vh ;
+      min-height: 60%;
+      width: 80% ;
       margin: auto;
       background-color: rgb(247, 241, 233);
     }
@@ -50,7 +51,7 @@
       color: red;
     }
   </style>
-  <script src="../jquery-3.7.1.js"></script>
+  <script src="../JS/jquery-3.7.1.js"></script>
 </head>
 <body>
   <header>
@@ -157,7 +158,6 @@
       select("#en").textContent = options[rightOption].en;
       select("#pr").textContent = options[rightOption].pr;
       select("#cn").textContent = "熟悉度："+cet6.level[wordLevel];
-
       options.forEach((option, index) => {
         const button = document.createElement("button");
         button.className = "options";
@@ -171,6 +171,7 @@
           } else {
             feedback.textContent = "错误!";
             feedback.className = "incorrect";
+            $('#cn').html (options[rightOption].cn);
           }
         };
       });
